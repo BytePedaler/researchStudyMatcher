@@ -80,9 +80,6 @@ def myopia_status():
 
 def main():
     intro()
-    acqr_rfrx()
-    cyl_conv()
-    calc_sph_eq()
     myopia_status()
 
 if __name__ == '__main__':
