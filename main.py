@@ -8,6 +8,8 @@ back to the user and matches them to one of the studies
 OR states why they met exclusion criteria.
 """
 
+LINE_BREAK = print(" ")
+
 def intro():
     print("Welcome to the GMOPC Research Study Matcher.")
     print("I'm going to ask a series of questions about patient data.")
@@ -19,7 +21,7 @@ def acqr_rfrx():
     sphere_power = float(input("Enter the sphere power (include negative sign, if applicable): "))
     cylinder_power = float(input("Enter the cylinder power (include negative sign, if applicable): "))
     axis_degrees = int(input("Enter the axis in degrees: "))
-    print(" ")
+    LINE_BREAK
     return sphere_power, cylinder_power, axis_degrees
 
 def cyl_conv(sphere_power, cylinder_power, axis_degrees):
@@ -47,8 +49,7 @@ def calc_sph_eq(sph_pow_neg_cyl, neg_cyl_pow):
     # Spherical equivalent conversion is: SE = (S + (C/2))
     # cyl_pow_conv = cylinder_power
     spherical_equivalent = sph_pow_neg_cyl + (neg_cyl_pow/2)
-    print("This patient's spherical equivalent is: " + str(spherical_equivalent))
-    print(" ")
+    print("This patient's spherical equivalent is: " + str(spherical_equivalent) + "\n")
     return spherical_equivalent
 
 def myopia_status(spherical_equivalent):
@@ -67,10 +68,11 @@ def myopia_status(spherical_equivalent):
     # If no: Verify axial length:
     else:
         pt_axial_length = float(input("Please enter the patient's axial length: "))
-        print(" ")
+        LINE_BREAK
         # If axial length is greater than 26: Question about glaucoma -> follow the question set above
         if pt_axial_length >= 26.00:
             glaucoma_dx = str(input("Has this patient been formally diagnosed with glaucoma (Y/N)? "))
+            LINE_BREAK
             # If yes: Questions about Cohort 2
             if glaucoma_dx == "Y":
                 pass
