@@ -22,13 +22,12 @@ def acqr_rfrx():
     print(" ")
     return sphere_power, cylinder_power, axis_degrees
 
-def cyl_conv():
-    sphere_power, cylinder_power, axis_degrees = acqr_rfrx()
+def cyl_conv(sphere_power, cylinder_power, axis_degrees):
     # If refraction input is in plus-cylinder, convert to minus-cylinder.
     # Else, assign the negative cylinder powers to the correct variable.
     if cylinder_power >= 0.00:
         sph_pow_neg_cyl = sphere_power + cylinder_power
-        neg_cyl_pow = 0.00 - cylinder_power
+        neg_cyl_pow = -cylinder_power
         # Convert axis degrees
         if axis_degrees >= 90:
             neg_cyl_axis_deg = axis_degrees - 90
@@ -42,19 +41,17 @@ def cyl_conv():
           "S:" + str(sph_pow_neg_cyl) + "  " +
           "C:" + str(neg_cyl_pow) + "  " +
           "A:" + str(neg_cyl_axis_deg))
-    return sph_pow_neg_cyl, neg_cyl_pow, neg_cyl_axis_deg
+    return sph_pow_neg_cyl, neg_cyl_pow
 
-def calc_sph_eq():
-    sph_pow_neg_cyl, neg_cyl_pow, neg_cyl_axis_deg = cyl_conv()
+def calc_sph_eq(sph_pow_neg_cyl, neg_cyl_pow):
     # Spherical equivalent conversion is: SE = (S + (C/2))
     # cyl_pow_conv = cylinder_power
-    spherical_equivalent = (sph_pow_neg_cyl + (neg_cyl_pow/2))
+    spherical_equivalent = sph_pow_neg_cyl + (neg_cyl_pow/2)
     print("This patient's spherical equivalent is: " + str(spherical_equivalent))
     print(" ")
     return spherical_equivalent
 
-def myopia_status():
-    spherical_equivalent = calc_sph_eq()
+def myopia_status(spherical_equivalent):
     # Determine if pt is myopic or not
     if spherical_equivalent <= -6.00:
         # If yes: Diagnosis of glaucoma or not?
@@ -70,6 +67,7 @@ def myopia_status():
     # If no: Verify axial length:
     else:
         pt_axial_length = float(input("Please enter the patient's axial length: "))
+        print(" ")
         # If axial length is greater than 26: Question about glaucoma -> follow the question set above
         if pt_axial_length >= 26.00:
             glaucoma_dx = str(input("Has this patient been formally diagnosed with glaucoma (Y/N)? "))
@@ -87,8 +85,11 @@ def myopia_status():
 
 
 def main():
-    intro()
-    myopia_status()
+    # intro()
+    sphere_power, cylinder_power, axis_degrees = acqr_rfrx()
+    sph_pow_neg_cyl, neg_cyl_pow = cyl_conv(sphere_power, cylinder_power, axis_degrees)
+    spherical_equivalent = calc_sph_eq(sph_pow_neg_cyl, neg_cyl_pow)
+    myopia_status(spherical_equivalent)
 
 if __name__ == '__main__':
     main()
