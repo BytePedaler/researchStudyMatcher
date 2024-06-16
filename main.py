@@ -1,11 +1,14 @@
 """
-I would like to make a program that makes my job easier.
+I have made a program that makes my day job easier!
 I currently work as a clinical research coordinator in
-ophthalmology. We have a few new studies that we have
-started working on so I'd like to make a program that a series
-of questions about patient data and then prints that data
-back to the user and matches them to one of the studies
-OR states why they met exclusion criteria.
+ophthalmology. We have a new study that we have
+started working on so I have made a program that asks
+a series of questions about patient data and matches
+them to one of the three cohorts of this study.
+
+Future planned improvements include printing the data
+back to the user and states why they met either
+inclusion or exclusion criteria.
 """
 
 def line_break():
@@ -173,7 +176,6 @@ def myopia_status(spherical_equivalent):
         # If axial length is less than 26: Questions about Cohort 3
         else:
             cohort_3_prompts()
-
 
 def main():
     intro()
