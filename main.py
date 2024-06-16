@@ -56,6 +56,11 @@ def cyl_conv(sphere_power, cylinder_power, axis_degrees):
           "S:" + str(sph_pow_neg_cyl) + "  " +
           "C:" + str(neg_cyl_pow) + "  " +
           "A:" + str(neg_cyl_axis_deg))
+    print("Checking criteria based on astigmatism...")
+    astig = neg_cyl_pow * -1
+    print("Patient's astigmatism/cylinder is: " + str(astig))
+    if astig > 3.00:
+        exclusion_criteria()
     return sph_pow_neg_cyl, neg_cyl_pow
 
 def calc_sph_eq(sph_pow_neg_cyl, neg_cyl_pow):
@@ -65,36 +70,14 @@ def calc_sph_eq(sph_pow_neg_cyl, neg_cyl_pow):
     print("This patient's spherical equivalent is: " + str(spherical_equivalent) + "\n")
     return spherical_equivalent
 
-def cohort_1_propmots():
-    pass
-
-def cohort_2_prompts(neg_cyl_pow):
-    print("This patient might be a candidate for Cohort 2.")
-    print("But first we'll need some more information: ")
-    line_break()
+def io_sx_prompts():
     io_sx = str(input("Has this patient had any intraocular surgery beyond cataract/IOL, refractive, or any glaucoma surgery (Y/N)? "))
     if io_sx == "N" or io_sx == "n":
         io_sx_2 = str(input("Has this patient had scleral buckling surgery (Y/N)? "))
         if io_sx_2 == "N" or io_sx_2 == "n":
             io_sx_3 = str(input("Has this patient had recent use of orthokeratology lenses (Y/N)? "))
             if io_sx_3 == "N" or io_sx_3 == "n":
-                line_break()
-                print("Accounting for astigmatism (based on information provided previously)...")
-                astig = neg_cyl_pow * -1
-                print("Patient's astigmatism/cylinder is: " + str(astig))
-                line_break()
-                if astig <= 3.00:
-                    glauc_optic_neuropathy = str(input("Does this patient have clinically identifiable focal thinning or notching of the ONH rim tissue and/or adjacent ppRNFL bundle defects (Y/N)? "))
-                    if glauc_optic_neuropathy == "Y" or glauc_optic_neuropathy == "y":
-                        hfa_cohort_2 = str(input('Does this patient have 24-2 HFA abnormalities on 2 or more instances ("borderline" or "ONL" AND a pattern deviation (PD) plot with a cluster >= 3 below 5%, at least 1 of which is below 1%, in an expected location) (Y/N)? '))
-                        if hfa_cohort_2 == "Y" or hfa_cohort_2 == "y":
-                            print("Upon initial review, this patient appears to meet GMOPC Cohort 2 criteria!")
-                        else:
-                            exclusion_criteria()
-                    else:
-                        exclusion_criteria()
-                else:
-                    exclusion_criteria()
+                pass
             else:
                 exclusion_criteria()
         else:
@@ -102,21 +85,74 @@ def cohort_2_prompts(neg_cyl_pow):
     else:
         exclusion_criteria()
 
-def cohort_3_prompts():
-    pass
+def cohort_1_prompts():
+    print("This patient might be a candidate for Cohort 1.")
+    print("But first we'll need some more information: ")
+    line_break()
+    io_sx_prompts()
+    iop_od_c1 = int(input("Enter the patient's IOP for their right eye: "))
+    iop_os_c1 = int(input("Enter the patient's IOP for their left eye: "))
+    if iop_os_c1 or iop_od_c1 >= 22:
+        exclusion_criteria()
+    else:
+        line_break()
+        print("Upon initial review, this patient appears to meet GMOPC Cohort 1 criteria!")
 
-def myopia_status(spherical_equivalent, neg_cyl_pow):
+def cohort_2_prompts():
+    print("This patient might be a candidate for Cohort 2.")
+    print("But first we'll need some more information: ")
+    line_break()
+    io_sx_prompts()
+    glauc_optic_neuropathy = str(input("Does this patient have clinically identifiable focal thinning or notching of the ONH rim tissue and/or adjacent ppRNFL bundle defects (Y/N)? "))
+    if glauc_optic_neuropathy == "Y" or glauc_optic_neuropathy == "y":
+        hfa_cohort_2 = str(input('Does this patient have 24-2 HFA abnormalities on 2 or more testing instances ("borderline" or "ONL" AND a pattern deviation (PD) plot with a cluster >= 3 below 5%, at least 1 of which is below 1%, in an expected location) (Y/N)? '))
+        if hfa_cohort_2 == "Y" or hfa_cohort_2 == "y":
+            line_break()
+            print("Upon initial review, this patient appears to meet GMOPC Cohort 2 criteria!")
+        else:
+            exclusion_criteria()
+    else:
+        exclusion_criteria()
+
+def cohort_3_q9():
+    onh_rim_c3 = str(input('Does this patient have focal thinning or notching of the ONH rim tissue and adjacent peripapillary or macular RNFL bundle defects that appear glaucomatous or are considered glaucomatous-suspicious and that are in the appropriate ONH or retinal hemisphere (Y/N)? '))
+    if onh_rim_c3 == "Y" or onh_rim_c3 == "y":
+        line_break()
+        print("Upon initial review, this patient appears to meet GMOPC Cohort 3 criteria!")
+    else:
+        exclusion_criteria()
+
+def cohort_3_prompts():
+    print("This patient might be a candidate for Cohort 3.")
+    print("But first we'll need some more information: ")
+    line_break()
+    io_sx_prompts()
+    mean_deviation = int(input("What was the mean deviation (MD) in dB on this patient's 24-2 HFA? "))
+    if mean_deviation >= -6:
+        hfa_defects_c3 = str(input("Did this patient's 24-2 HFA test as 'borderline' or 'ONL' (Y/N)? "))
+        if hfa_defects_c3 == "Y" or hfa_defects_c3 == "y":
+            cohort_3_q9()
+        else:
+            hfa_10_2_c3 = str(input("Did this patient show 10-2 HFA defects of contiguous test points in one hemifield with total deviation points falling below 5th percentile of normal distribution (Y/N)? "))
+            if hfa_10_2_c3 == "Y" or hfa_10_2_c3 == "y":
+                cohort_3_q9()
+            else:
+                exclusion_criteria()
+    else:
+        exclusion_criteria()
+
+def myopia_status(spherical_equivalent):
     # Determine if pt is myopic or not
     if spherical_equivalent <= -6.00:
         # If yes: Diagnosis of glaucoma or not?
         glaucoma_dx = str(input("Has this patient been formally diagnosed with glaucoma (Y/N)? "))
         # If yes: Questions about Cohort 2
         if glaucoma_dx == "Y" or glaucoma_dx == "y":
-            cohort_2_prompts(neg_cyl_pow)
+            cohort_2_prompts()
 
         # if no: Questions about Cohort 1
         else:
-            pass
+            cohort_1_prompts()
 
     # If no: Verify axial length:
     else:
@@ -128,15 +164,15 @@ def myopia_status(spherical_equivalent, neg_cyl_pow):
             line_break()
             # If yes: Questions about Cohort 2
             if glaucoma_dx == "Y" or glaucoma_dx == "y":
-                cohort_2_prompts(neg_cyl_pow)
+                cohort_2_prompts()
 
             # if no: Questions about Cohort 1
             else:
-                pass
+                cohort_1_prompts()
 
         # If axial length is less than 26: Questions about Cohort 3
         else:
-            pass
+            cohort_3_prompts()
 
 
 def main():
@@ -145,7 +181,7 @@ def main():
     sphere_power, cylinder_power, axis_degrees = acqr_rfrx()
     sph_pow_neg_cyl, neg_cyl_pow = cyl_conv(sphere_power, cylinder_power, axis_degrees)
     spherical_equivalent = calc_sph_eq(sph_pow_neg_cyl, neg_cyl_pow)
-    myopia_status(spherical_equivalent, neg_cyl_pow)
+    myopia_status(spherical_equivalent)
 
 if __name__ == '__main__':
     main()
