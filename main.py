@@ -8,7 +8,11 @@ back to the user and matches them to one of the studies
 OR states why they met exclusion criteria.
 """
 
-LINE_BREAK = print(" ")
+def line_break():
+    print(" ")
+
+def exclusion_criteria():
+    exclusion_criteria_promopt = print("Sorry, this patient is excluded from the GMOPC study.")
 
 def intro():
     print("Welcome to the GMOPC Research Study Matcher.")
@@ -21,7 +25,7 @@ def acqr_rfrx():
     sphere_power = float(input("Enter the sphere power (include negative sign, if applicable): "))
     cylinder_power = float(input("Enter the cylinder power (include negative sign, if applicable): "))
     axis_degrees = int(input("Enter the axis in degrees: "))
-    LINE_BREAK
+    line_break()
     return sphere_power, cylinder_power, axis_degrees
 
 def cyl_conv(sphere_power, cylinder_power, axis_degrees):
@@ -52,14 +56,44 @@ def calc_sph_eq(sph_pow_neg_cyl, neg_cyl_pow):
     print("This patient's spherical equivalent is: " + str(spherical_equivalent) + "\n")
     return spherical_equivalent
 
+def cohort_2_prompts():
+    io_sx = str(input("Has this patient had any intraocular surgery beyond cataract/IOL, refractive, or any glaucoma surgery (Y/N)? "))
+    if io_sx == "N" or "n":
+        io_sx_2 = str(input("Has this patient had scleral buckling surgery (Y/N)? "))
+        if io_sx_2 == "N" or "n":
+            io_sx_3 = str(input("Has this patient had recent use of orthokeratology lenses (Y/N)? "))
+            if io_sx_3 == 'N' or "n":
+                print("Accounting for astigmatism (based on information provided previously)...")
+                astig = -3.50
+                if astig <= 3.00:
+                    glauc_optic_neuropathy = str(input("Does this patient have clinically identifiable focal thinning or notching of the ONH rim tissue and/or adjacent ppRNFL bundle defects (Y/N)? "))
+                    if glauc_optic_neuropathy == "Y" or "y": #BUG: this is accepting input of "n" as confirmatory, not sure why, could try switching to 1 = true and 2 = false?
+                        hfa_cohort_2 = str(input(
+                            'Does this patient have 24-2 HFA abnormalities on 2 or more instances ("borderline" or "ONL" AND a pattern deviation (PD) plot with a cluster >= 3 below 5%, at least 1 of which is below 1%, in an expected location) (Y/N)? '))
+                        if hfa_cohort_2 == "Y" or "y":
+                            cohort_2_potential = print(
+                                "Upon initial review, this patient appears to meet cohort 2 criteria!")
+                        else:
+                            exclusion_criteria()
+                    else:
+                        exclusion_criteria()
+                else:
+                    exclusion_criteria()
+            else:
+                exclusion_criteria()
+        else:
+            exclusion_criteria()
+    else:
+        exclusion_criteria()
+
 def myopia_status(spherical_equivalent):
     # Determine if pt is myopic or not
     if spherical_equivalent <= -6.00:
         # If yes: Diagnosis of glaucoma or not?
         glaucoma_dx = str(input("Has this patient been formally diagnosed with glaucoma (Y/N)? "))
         # If yes: Questions about Cohort 2
-        if glaucoma_dx == "Y":
-            pass
+        if glaucoma_dx == "Y" or "y":
+            cohort_2_prompts()
 
         # if no: Questions about Cohort 1
         else:
@@ -68,14 +102,14 @@ def myopia_status(spherical_equivalent):
     # If no: Verify axial length:
     else:
         pt_axial_length = float(input("Please enter the patient's axial length: "))
-        LINE_BREAK
+        line_break()
         # If axial length is greater than 26: Question about glaucoma -> follow the question set above
         if pt_axial_length >= 26.00:
             glaucoma_dx = str(input("Has this patient been formally diagnosed with glaucoma (Y/N)? "))
-            LINE_BREAK
+            line_break()
             # If yes: Questions about Cohort 2
-            if glaucoma_dx == "Y":
-                pass
+            if glaucoma_dx == "Y" or "y":
+                cohort_2_prompts()
 
             # if no: Questions about Cohort 1
             else:
@@ -87,7 +121,7 @@ def myopia_status(spherical_equivalent):
 
 
 def main():
-    # intro()
+    intro()
     sphere_power, cylinder_power, axis_degrees = acqr_rfrx()
     sph_pow_neg_cyl, neg_cyl_pow = cyl_conv(sphere_power, cylinder_power, axis_degrees)
     spherical_equivalent = calc_sph_eq(sph_pow_neg_cyl, neg_cyl_pow)
