@@ -12,13 +12,22 @@ def line_break():
     print(" ")
 
 def exclusion_criteria():
-    exclusion_criteria_promopt = print("Sorry, this patient is excluded from the GMOPC study.")
+    line_break()
+    exclusion_criteria_promopt = print("Based on the data entered, this patient is excluded from the GMOPC study.")
+    exit()
 
 def intro():
     print("Welcome to the GMOPC Research Study Matcher.")
     print("I'm going to ask a series of questions about patient data.")
     print("Some of the answers may seem obvious, but it's simply in the sake of clarity.")
     print("Let's begin: ")
+    line_break()
+
+def visual_acuity():
+    cor_vis_ac = int(input("Enter the patient's best corrected visual acuity: 20/"))
+    if cor_vis_ac >= 40:
+        exclusion_criteria()
+    line_break()
 
 def acqr_rfrx():
     # Take refraction as input
@@ -56,6 +65,9 @@ def calc_sph_eq(sph_pow_neg_cyl, neg_cyl_pow):
     print("This patient's spherical equivalent is: " + str(spherical_equivalent) + "\n")
     return spherical_equivalent
 
+def cohort_1_propmots():
+    pass
+
 def cohort_2_prompts(neg_cyl_pow):
     print("This patient might be a candidate for Cohort 2.")
     print("But first we'll need some more information: ")
@@ -76,7 +88,7 @@ def cohort_2_prompts(neg_cyl_pow):
                     if glauc_optic_neuropathy == "Y" or glauc_optic_neuropathy == "y":
                         hfa_cohort_2 = str(input('Does this patient have 24-2 HFA abnormalities on 2 or more instances ("borderline" or "ONL" AND a pattern deviation (PD) plot with a cluster >= 3 below 5%, at least 1 of which is below 1%, in an expected location) (Y/N)? '))
                         if hfa_cohort_2 == "Y" or hfa_cohort_2 == "y":
-                            print("Upon initial review, this patient appears to meet cohort 2 criteria!")
+                            print("Upon initial review, this patient appears to meet GMOPC Cohort 2 criteria!")
                         else:
                             exclusion_criteria()
                     else:
@@ -89,6 +101,9 @@ def cohort_2_prompts(neg_cyl_pow):
             exclusion_criteria()
     else:
         exclusion_criteria()
+
+def cohort_3_prompts():
+    pass
 
 def myopia_status(spherical_equivalent, neg_cyl_pow):
     # Determine if pt is myopic or not
@@ -126,6 +141,7 @@ def myopia_status(spherical_equivalent, neg_cyl_pow):
 
 def main():
     intro()
+    visual_acuity()
     sphere_power, cylinder_power, axis_degrees = acqr_rfrx()
     sph_pow_neg_cyl, neg_cyl_pow = cyl_conv(sphere_power, cylinder_power, axis_degrees)
     spherical_equivalent = calc_sph_eq(sph_pow_neg_cyl, neg_cyl_pow)
