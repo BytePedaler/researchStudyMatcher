@@ -56,23 +56,27 @@ def calc_sph_eq(sph_pow_neg_cyl, neg_cyl_pow):
     print("This patient's spherical equivalent is: " + str(spherical_equivalent) + "\n")
     return spherical_equivalent
 
-def cohort_2_prompts():
+def cohort_2_prompts(neg_cyl_pow):
+    print("This patient might be a candidate for Cohort 2.")
+    print("But first we'll need some more information: ")
+    line_break()
     io_sx = str(input("Has this patient had any intraocular surgery beyond cataract/IOL, refractive, or any glaucoma surgery (Y/N)? "))
-    if io_sx == "N" or "n":
+    if io_sx == "N" or io_sx == "n":
         io_sx_2 = str(input("Has this patient had scleral buckling surgery (Y/N)? "))
-        if io_sx_2 == "N" or "n":
+        if io_sx_2 == "N" or io_sx_2 == "n":
             io_sx_3 = str(input("Has this patient had recent use of orthokeratology lenses (Y/N)? "))
-            if io_sx_3 == 'N' or "n":
+            if io_sx_3 == "N" or io_sx_3 == "n":
+                line_break()
                 print("Accounting for astigmatism (based on information provided previously)...")
-                astig = -3.50
+                astig = neg_cyl_pow * -1
+                print("Patient's astigmatism/cylinder is: " + str(astig))
+                line_break()
                 if astig <= 3.00:
                     glauc_optic_neuropathy = str(input("Does this patient have clinically identifiable focal thinning or notching of the ONH rim tissue and/or adjacent ppRNFL bundle defects (Y/N)? "))
-                    if glauc_optic_neuropathy == "Y" or "y": #BUG: this is accepting input of "n" as confirmatory, not sure why, could try switching to 1 = true and 2 = false?
-                        hfa_cohort_2 = str(input(
-                            'Does this patient have 24-2 HFA abnormalities on 2 or more instances ("borderline" or "ONL" AND a pattern deviation (PD) plot with a cluster >= 3 below 5%, at least 1 of which is below 1%, in an expected location) (Y/N)? '))
-                        if hfa_cohort_2 == "Y" or "y":
-                            cohort_2_potential = print(
-                                "Upon initial review, this patient appears to meet cohort 2 criteria!")
+                    if glauc_optic_neuropathy == "Y" or glauc_optic_neuropathy == "y":
+                        hfa_cohort_2 = str(input('Does this patient have 24-2 HFA abnormalities on 2 or more instances ("borderline" or "ONL" AND a pattern deviation (PD) plot with a cluster >= 3 below 5%, at least 1 of which is below 1%, in an expected location) (Y/N)? '))
+                        if hfa_cohort_2 == "Y" or hfa_cohort_2 == "y":
+                            print("Upon initial review, this patient appears to meet cohort 2 criteria!")
                         else:
                             exclusion_criteria()
                     else:
@@ -86,14 +90,14 @@ def cohort_2_prompts():
     else:
         exclusion_criteria()
 
-def myopia_status(spherical_equivalent):
+def myopia_status(spherical_equivalent, neg_cyl_pow):
     # Determine if pt is myopic or not
     if spherical_equivalent <= -6.00:
         # If yes: Diagnosis of glaucoma or not?
         glaucoma_dx = str(input("Has this patient been formally diagnosed with glaucoma (Y/N)? "))
         # If yes: Questions about Cohort 2
-        if glaucoma_dx == "Y" or "y":
-            cohort_2_prompts()
+        if glaucoma_dx == "Y" or glaucoma_dx == "y":
+            cohort_2_prompts(neg_cyl_pow)
 
         # if no: Questions about Cohort 1
         else:
@@ -108,8 +112,8 @@ def myopia_status(spherical_equivalent):
             glaucoma_dx = str(input("Has this patient been formally diagnosed with glaucoma (Y/N)? "))
             line_break()
             # If yes: Questions about Cohort 2
-            if glaucoma_dx == "Y" or "y":
-                cohort_2_prompts()
+            if glaucoma_dx == "Y" or glaucoma_dx == "y":
+                cohort_2_prompts(neg_cyl_pow)
 
             # if no: Questions about Cohort 1
             else:
@@ -125,7 +129,7 @@ def main():
     sphere_power, cylinder_power, axis_degrees = acqr_rfrx()
     sph_pow_neg_cyl, neg_cyl_pow = cyl_conv(sphere_power, cylinder_power, axis_degrees)
     spherical_equivalent = calc_sph_eq(sph_pow_neg_cyl, neg_cyl_pow)
-    myopia_status(spherical_equivalent)
+    myopia_status(spherical_equivalent, neg_cyl_pow)
 
 if __name__ == '__main__':
     main()
