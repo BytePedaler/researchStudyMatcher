@@ -11,6 +11,17 @@ back to the user and states why they met either
 inclusion or exclusion criteria.
 """
 
+"""
+Upcoming features list:
+ - Eye selection (R/L/Both)
+ - Refraction calculation based on HFA Rx
+ - Printed table of data collected and calculated at end of prompt with final suggested result
+ - SQL integration for future reference of collected data
+ - Ability to select "Unsure" for prompts
+    - Still allowing progress through the prompts but reminder consideration of incomplete data
+        - Integrating "missing data" into end table printed to user, reminding them to find this data elsewhere
+"""
+
 def line_break():
     print(" ")
 
@@ -25,6 +36,26 @@ def intro():
     print("Some of the answers may seem obvious, but it's simply in the sake of clarity.")
     print("Let's begin: ")
     line_break()
+
+def eye_selection():
+    user_eye_selection = 0
+    while True:
+        eye_selector = int(input("First, which eye/eyes do we want to determine a study match with (1 = RE, 2 = LE, 3 = BEs)? "))
+        if eye_selector == 1:
+            user_eye_selection = 1
+            break
+        elif eye_selector ==2:
+            user_eye_selection = 2
+            break
+        elif eye_selector ==3:
+            user_eye_selection = 3
+            break
+        else:
+            print("That is not a valid input. Please try again.")
+            user_eye_selection = 0
+        # print("UES DEBUGGING CODE 1: " + str(user_eye_selection))
+    # print("UES DEBUGGING CODE 2: " + str(user_eye_selection))
+    return user_eye_selection
 
 def visual_acuity():
     cor_vis_ac = int(input("Enter the patient's best corrected visual acuity: 20/"))
@@ -177,13 +208,44 @@ def myopia_status(spherical_equivalent):
         else:
             cohort_3_prompts()
 
+def eye_based_main(user_eye_selection):
+    pt_eye_right = "Right Eye"
+    pt_eye_left = "Left Eye"
+    if user_eye_selection == 1:
+        pt_eye = pt_eye_right
+        visual_acuity()
+        sphere_power, cylinder_power, axis_degrees = acqr_rfrx()
+        sph_pow_neg_cyl, neg_cyl_pow = cyl_conv(sphere_power, cylinder_power, axis_degrees)
+        spherical_equivalent = calc_sph_eq(sph_pow_neg_cyl, neg_cyl_pow)
+        myopia_status(spherical_equivalent)
+    if user_eye_selection == 2:
+        pt_eye = pt_eye_left
+        visual_acuity()
+        sphere_power, cylinder_power, axis_degrees = acqr_rfrx()
+        sph_pow_neg_cyl, neg_cyl_pow = cyl_conv(sphere_power, cylinder_power, axis_degrees)
+        spherical_equivalent = calc_sph_eq(sph_pow_neg_cyl, neg_cyl_pow)
+        myopia_status(spherical_equivalent)
+    if user_eye_selection == 3:
+        pt_eye_one = pt_eye_right
+        pt_eye_two = pt_eye_left
+        visual_acuity()
+        sphere_power, cylinder_power, axis_degrees = acqr_rfrx()
+        sph_pow_neg_cyl, neg_cyl_pow = cyl_conv(sphere_power, cylinder_power, axis_degrees)
+        spherical_equivalent = calc_sph_eq(sph_pow_neg_cyl, neg_cyl_pow)
+        myopia_status(spherical_equivalent)
+
+
 def main():
     intro()
+    eye_selection()
+    eye_based_main()
+    """
     visual_acuity()
     sphere_power, cylinder_power, axis_degrees = acqr_rfrx()
     sph_pow_neg_cyl, neg_cyl_pow = cyl_conv(sphere_power, cylinder_power, axis_degrees)
     spherical_equivalent = calc_sph_eq(sph_pow_neg_cyl, neg_cyl_pow)
     myopia_status(spherical_equivalent)
+    """
 
 if __name__ == '__main__':
     main()
