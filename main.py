@@ -11,17 +11,6 @@ back to the user and states why they met either
 inclusion or exclusion criteria.
 """
 
-"""
-Upcoming features list:
- - Eye selection (R/L/Both)
- - Refraction calculation based on HFA Rx
- - Printed table of data collected and calculated at end of prompt with final suggested result
- - SQL integration for future reference of collected data
- - Ability to select "Unsure" for prompts
-    - Still allowing progress through the prompts but reminder consideration of incomplete data
-        - Integrating "missing data" into end table printed to user, reminding them to find this data elsewhere
-"""
-
 def line_break():
     print(" ")
 
