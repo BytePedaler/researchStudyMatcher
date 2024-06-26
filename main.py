@@ -33,10 +33,10 @@ def eye_selection():
         if eye_selector == 1:
             user_eye_selection = 1
             break
-        elif eye_selector ==2:
+        elif eye_selector == 2:
             user_eye_selection = 2
             break
-        elif eye_selector ==3:
+        elif eye_selector == 3:
             user_eye_selection = 3
             break
         else:
@@ -138,7 +138,10 @@ def cohort_2_prompts():
         exclusion_criteria()
 
 def cohort_3_q9():
-    onh_rim_c3 = str(input('Does this patient have focal thinning or notching of the ONH rim tissue and adjacent peripapillary or macular RNFL bundle defects that appear glaucomatous or are considered glaucomatous-suspicious and that are in the appropriate ONH or retinal hemisphere (Y/N)? '))
+    onh_rim_c3 = str(input('Does this patient have focal thinning or notching of the ONH rim tissue\n'
+                           'and adjacent peripapillary or macular RNFL bundle defects that appear\n'
+                           'glaucomatous or are considered glaucomatous-suspicious and that are in\n'
+                           'the appropriate ONH or retinal hemisphere (Y/N)? '))
     if onh_rim_c3 == "Y" or onh_rim_c3 == "y":
         line_break()
         print("Upon initial review, this patient appears to meet GMOPC Cohort 3 criteria!")
@@ -197,44 +200,47 @@ def myopia_status(spherical_equivalent):
         else:
             cohort_3_prompts()
 
-def eye_based_main(user_eye_selection):
-    pt_eye_right = "Right Eye"
-    pt_eye_left = "Left Eye"
-    if user_eye_selection == 1:
-        pt_eye = pt_eye_right
-        visual_acuity()
-        sphere_power, cylinder_power, axis_degrees = acqr_rfrx()
-        sph_pow_neg_cyl, neg_cyl_pow = cyl_conv(sphere_power, cylinder_power, axis_degrees)
-        spherical_equivalent = calc_sph_eq(sph_pow_neg_cyl, neg_cyl_pow)
-        myopia_status(spherical_equivalent)
-    if user_eye_selection == 2:
-        pt_eye = pt_eye_left
-        visual_acuity()
-        sphere_power, cylinder_power, axis_degrees = acqr_rfrx()
-        sph_pow_neg_cyl, neg_cyl_pow = cyl_conv(sphere_power, cylinder_power, axis_degrees)
-        spherical_equivalent = calc_sph_eq(sph_pow_neg_cyl, neg_cyl_pow)
-        myopia_status(spherical_equivalent)
-    if user_eye_selection == 3:
-        pt_eye_one = pt_eye_right
-        pt_eye_two = pt_eye_left
-        visual_acuity()
-        sphere_power, cylinder_power, axis_degrees = acqr_rfrx()
-        sph_pow_neg_cyl, neg_cyl_pow = cyl_conv(sphere_power, cylinder_power, axis_degrees)
-        spherical_equivalent = calc_sph_eq(sph_pow_neg_cyl, neg_cyl_pow)
-        myopia_status(spherical_equivalent)
-
-
-def main():
-    intro()
-    eye_selection()
-    eye_based_main()
-    """
+def primary_prompts_re():
+    line_break()
+    print("The following questions will be in regard to the patient's right eye only: ")
+    line_break()
     visual_acuity()
     sphere_power, cylinder_power, axis_degrees = acqr_rfrx()
     sph_pow_neg_cyl, neg_cyl_pow = cyl_conv(sphere_power, cylinder_power, axis_degrees)
     spherical_equivalent = calc_sph_eq(sph_pow_neg_cyl, neg_cyl_pow)
     myopia_status(spherical_equivalent)
-    """
+
+def primary_prompts_le():
+    line_break()
+    print("The following questions will be in regard to the patient's left eye only: ")
+    line_break()
+    visual_acuity()
+    sphere_power, cylinder_power, axis_degrees = acqr_rfrx()
+    sph_pow_neg_cyl, neg_cyl_pow = cyl_conv(sphere_power, cylinder_power, axis_degrees)
+    spherical_equivalent = calc_sph_eq(sph_pow_neg_cyl, neg_cyl_pow)
+    myopia_status(spherical_equivalent)
+
+def eye_based_main(user_eye_selection):
+    pt_eye_right = "right eye"
+    pt_eye_left = "left eye"
+    if user_eye_selection == 1:
+        pt_eye_one = pt_eye_right
+        primary_prompts_re()
+    if user_eye_selection == 2:
+        pt_eye_one = pt_eye_left
+        primary_prompts_le()
+    if user_eye_selection == 3:
+        pt_eye_one = pt_eye_right
+        primary_prompts_re()
+        pt_eye_two = pt_eye_left
+        primary_prompts_le()
+
+
+def main():
+    intro()
+    #eye_selection()
+    user_eye_selection = eye_selection()
+    eye_based_main(user_eye_selection)
 
 if __name__ == '__main__':
     main()
