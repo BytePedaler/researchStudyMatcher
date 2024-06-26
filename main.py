@@ -221,6 +221,7 @@ def primary_prompts_le():
     myopia_status(spherical_equivalent)
 
 def eye_based_main(user_eye_selection):
+    # Future features initialized but not yet utilized!
     pt_eye_right = "right eye"
     pt_eye_left = "left eye"
     if user_eye_selection == 1:
