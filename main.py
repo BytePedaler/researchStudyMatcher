@@ -126,9 +126,13 @@ def cohort_2_prompts():
     print("But first we'll need some more information: ")
     line_break()
     io_sx_prompts()
-    glauc_optic_neuropathy = str(input("Does this patient have clinically identifiable focal thinning or notching of the ONH rim tissue and/or adjacent ppRNFL bundle defects (Y/N)? "))
+    glauc_optic_neuropathy = str(input("Does this patient have clinically identifiable focal thinning or\n"
+                                       "notching of the ONH rim tissue and/or adjacent ppRNFL bundle defects (Y/N)? "))
     if glauc_optic_neuropathy == "Y" or glauc_optic_neuropathy == "y":
-        hfa_cohort_2 = str(input('Does this patient have 24-2 HFA abnormalities on 2 or more testing instances ("borderline" or "ONL" AND a pattern deviation (PD) plot with a cluster >= 3 below 5%, at least 1 of which is below 1%, in an expected location) (Y/N)? '))
+        hfa_cohort_2 = str(input('Does this patient have 24-2 HFA abnormalities on 2 or more\n'
+                                 'testing instances ("borderline" or "ONL" AND a pattern deviation (PD)\n'
+                                 'plot with a cluster >= 3 below 5%, at least 1 of which is below 1%,\n'
+                                 'in an expected location) (Y/N)? '))
         if hfa_cohort_2 == "Y" or hfa_cohort_2 == "y":
             line_break()
             print("Upon initial review, this patient appears to meet GMOPC Cohort 2 criteria!")
@@ -159,7 +163,9 @@ def cohort_3_prompts():
         if hfa_defects_c3 == "Y" or hfa_defects_c3 == "y":
             cohort_3_q9()
         else:
-            hfa_10_2_c3 = str(input("Did this patient show 10-2 HFA defects of contiguous test points in one hemifield with total deviation points falling below 5th percentile of normal distribution (Y/N)? "))
+            hfa_10_2_c3 = str(input("Did this patient show 10-2 HFA defects of contiguous test\n"
+                                    "points in one hemifield with total deviation points falling\n"
+                                    "below 5th percentile of normal distribution (Y/N)? "))
             if hfa_10_2_c3 == "Y" or hfa_10_2_c3 == "y":
                 cohort_3_q9()
             else:
