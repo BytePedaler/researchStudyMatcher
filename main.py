@@ -157,8 +157,8 @@ def cohort_3_prompts():
     print("But first we'll need some more information: ")
     line_break()
     io_sx_prompts()
-    mean_deviation = int(input("What was the mean deviation (MD) in dB on this patient's 24-2 HFA? "))
-    if mean_deviation >= -6:
+    mean_deviation = float(input("What was the mean deviation (MD) in dB on this patient's 24-2 HFA? "))
+    if mean_deviation >= -6.00:
         hfa_defects_c3 = str(input("Did this patient's 24-2 HFA test as 'borderline' or 'ONL' (Y/N)? "))
         if hfa_defects_c3 == "Y" or hfa_defects_c3 == "y":
             cohort_3_q9()
